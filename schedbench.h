@@ -43,4 +43,6 @@ void testdynamicn(void);
 
 void testguidedn(void);
 
+void testsections(void);
+
 #endif //SCHEDBENCH_H

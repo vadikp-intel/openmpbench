@@ -76,6 +76,13 @@ int main(int argc, char **argv) {
 	cksz *= 2;
     }
 
+    /* TEST SECTIONS,n */
+    nthreads = 1;
+    while (nthreads <= itersperthr) {
+    sprintf(testName, "SECTIONS %d", nthreads);
+    benchmark(testName, &testsections);
+    nthreads *= 2;
+    }
     finalise();
 
     return EXIT_SUCCESS;
@@ -143,3 +150,58 @@ void testguidedn() {
 	}
     }
 }
+
+void testsections() {
+    int j;
+#pragma omp parallel sections num_threads(nthreads)
+    {
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength);
+            }
+        }
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength * 2);
+            }
+        }
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength * 4);
+            }
+        }
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength * 8);
+            }
+        }
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength * 16);
+            }
+        }
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength * 32);
+            }
+        }
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength * 64);
+            }
+        }
+    #pragma omp section
+        {
+            for (j = 0; j < innerreps * nthreads; j++) {
+                delay(delaylength * 128);
+            }
+        }
+    }
+}    
