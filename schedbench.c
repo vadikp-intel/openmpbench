@@ -77,11 +77,14 @@ int main(int argc, char **argv) {
     }
 
     /* TEST SECTIONS,n */
+    sprintf(testName, "SECTIONS no OMP");
+    benchmark(testName, &testsections_noomp);
+
     nthreads = 1;
-    while (nthreads <= itersperthr) {
-    sprintf(testName, "SECTIONS %d", nthreads);
+    while (nthreads <= 10) {
+    sprintf(testName, "SECTIONS %d threads", nthreads);
     benchmark(testName, &testsections);
-    nthreads *= 2;
+    nthreads++;
     }
     finalise();
 
@@ -151,57 +154,103 @@ void testguidedn() {
     }
 }
 
+void testsections_noomp() {
+    int j;
+    {
+        {
+            for (j = 0; j < innerreps; j++) {
+                delay(delaylength);
+            }
+        }
+        {
+            for (j = 0; j < innerreps; j++) {
+                delay(delaylength * 2);
+            }
+        }
+        {
+            for (j = 0; j < innerreps * 5; j++) {
+                delay(delaylength * 4);
+            }
+        }
+        {
+            for (j = 0; j < innerreps; j++) {
+                delay(delaylength * 8);
+            }
+        }
+        {
+            for (j = 0; j < innerreps; j++) {
+                delay(delaylength * 16);
+            }
+        }
+        {
+            for (j = 0; j < innerreps; j++) {
+                delay(delaylength * 32);
+            }
+        }
+        {
+            for (j = 0; j < innerreps; j++) {
+                delay(delaylength * 64);
+            }
+        }
+        {
+            for (j = 0; j < innerreps; j++) {
+                delay(delaylength * 128);
+            }
+        }
+    }
+}
+
 void testsections() {
     int j;
 #pragma omp parallel sections num_threads(nthreads)
     {
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength);
             }
         }
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength * 2);
             }
         }
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength * 4);
             }
         }
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength * 8);
             }
         }
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength * 16);
             }
         }
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength * 32);
             }
         }
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength * 64);
             }
         }
     #pragma omp section
         {
-            for (j = 0; j < innerreps * nthreads; j++) {
+            for (j = 0; j < innerreps; j++) {
                 delay(delaylength * 128);
             }
         }
     }
-}    
+}

@@ -33,7 +33,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define DEFAULT_DELAY_LENGTH -1 // -1 means the delay length should be auto generated
 #define DEFAULT_OUTER_REPS 20   // Outer repetitions
 #define DEFAULT_TEST_TARGET_TIME 1000.0 // Test Target time in microseconds.
 #ifdef SCHEDBENCH
@@ -45,7 +44,7 @@
 extern int nthreads;              // Number of OpenMP threads
 extern int delaylength;           // The number of iterations to delay for
 extern int outerreps;             // Outer repetitions
-extern unsigned long innerreps;   // Inner repetitions
+extern int innerreps;             // Inner repetitions
 extern double delaytime;          // Delay time in microseconds
 extern double targettesttime;     // The length of time in microseconds the test
                                   // should run for

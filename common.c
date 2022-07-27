@@ -43,68 +43,66 @@
 int nthreads = -1;           // Number of OpenMP threads
 int delaylength = -1;        // The number of iterations to delay for
 int outerreps = -1;          // Outer repetitions
+int innerreps = -1;          // Inner repetitions
 double delaytime = -1.0;     // Length of time to delay for in microseconds
 double targettesttime = 0.0; // The length of time in microseconds that the test
                              // should run for.
-unsigned long innerreps; // Inner repetitions
 double *times;           // Array of doubles storing the benchmark times in microseconds
 double referencetime;    // The average reference time in microseconds to perform
-			 // outerreps runs
+             // outerreps runs
 double referencesd;      // The standard deviation in the reference time in
-			 // microseconds for outerreps runs.
+             // microseconds for outerreps runs.
 double testtime;         // The average test time in microseconds for
-			 // outerreps runs
-double testsd;		 // The standard deviation in the test time in
-			 // microseconds for outerreps runs.
+             // outerreps runs
+double testsd;           // The standard deviation in the test time in
+             // microseconds for outerreps runs.
 
 void usage(char *argv[]) {
     printf("Usage: %s.x \n"
-	   "\t--outer-repetitions <outer-repetitions> (default %d)\n"
-	   "\t--test-time <target-test-time> (default %0.2f microseconds)\n"
-	   "\t--delay-time <delay-time> (default %0.4f microseconds)\n"
-	   "\t--delay-length <delay-length> "
-	   "(default auto-generated based on processor speed)\n",
-	   argv[0],
-	   DEFAULT_OUTER_REPS, DEFAULT_TEST_TARGET_TIME, DEFAULT_DELAY_TIME);
+       "\t--outer-repetitions <outer-repetitions> (default %d)\n"
+       "\t--test-time <target-test-time> (default %0.2f microseconds)\n"
+       "\t--delay-time <delay-time> (default %0.4f microseconds)",
+       argv[0],
+       DEFAULT_OUTER_REPS, DEFAULT_TEST_TARGET_TIME, DEFAULT_DELAY_TIME);
 }
 
 void parse_args(int argc, char *argv[]) {
     // Parse the parameters
     int arg;
     for (arg = 1; arg < argc; arg++) {
-	if (strcmp(argv[arg], "--delay-time") == 0.0) {
-	    delaytime = atof(argv[++arg]);
-	    if (delaytime == 0.0) {
-		printf("Invalid float:--delay-time: %s\n", argv[arg]);
-		usage(argv);
-		exit(EXIT_FAILURE);
-	    }
-		
-	} else if (strcmp(argv[arg], "--outer-repetitions") == 0) {
-	    outerreps = atoi(argv[++arg]);
-	    if (outerreps == 0) {
-		printf("Invalid integer:--outer-repetitions: %s\n", argv[arg]);
-		usage(argv);
-		exit(EXIT_FAILURE);
-	    }
-		
-	} else if (strcmp(argv[arg], "--test-time") == 0) {
-	    targettesttime = atof(argv[++arg]);
-	    if (targettesttime == 0) {
-		printf("Invalid integer:--test-time: %s\n", argv[arg]);
-		usage(argv);
-		exit(EXIT_FAILURE);
-	    }
-		
-	} else if (strcmp(argv[arg], "-h") == 0) {
-	    usage(argv);
-	    exit(EXIT_SUCCESS);
-		
-	} else {
-	    printf("Invalid parameters: %s\n", argv[arg]);
-	    usage(argv);
-	    exit(EXIT_FAILURE);
-	}
+    if (strcmp(argv[arg], "--delay-time") == 0.0) {
+        delaytime = atof(argv[++arg]);
+        if (delaytime == 0.0) {
+        printf("Invalid float:--delay-time: %s\n", argv[arg]);
+        usage(argv);
+        exit(EXIT_FAILURE);
+        }
+        
+    } else if (strcmp(argv[arg], "--outer-repetitions") == 0) {
+        outerreps = atoi(argv[++arg]);
+        if (outerreps == 0) {
+        printf("Invalid integer:--outer-repetitions: %s\n", argv[arg]);
+        usage(argv);
+        exit(EXIT_FAILURE);
+        }
+        
+    } else if (strcmp(argv[arg], "--test-time") == 0) {
+        targettesttime = atof(argv[++arg]);
+        if (targettesttime == 0) {
+        printf("Invalid float:--test-time: %s\n", argv[arg]);
+        usage(argv);
+        exit(EXIT_FAILURE);
+        }
+        
+    } else if (strcmp(argv[arg], "-h") == 0) {
+        usage(argv);
+        exit(EXIT_SUCCESS);
+        
+    } else {
+        printf("Invalid parameters: %s\n", argv[arg]);
+        usage(argv);
+        exit(EXIT_FAILURE);
+    }
     }
 }
 
@@ -129,33 +127,33 @@ int getdelaylengthfromtime(double delaytime) {
     delay(delaylength);
 
     while (lapsedtime < delaytime) {
-	delaylength = delaylength * 1.1 + 1;
-	starttime = getclock();
-	for (i = 0; i < reps; i++) {
-	    delay(delaylength);
-	}
-	lapsedtime = (getclock() - starttime) / (double) reps;
+    delaylength = delaylength * 1.1 + 1;
+    starttime = getclock();
+    for (i = 0; i < reps; i++) {
+        delay(delaylength);
+    }
+    lapsedtime = (getclock() - starttime) / (double) reps;
     }
     return delaylength;
 
 }
 
-unsigned long getinnerreps(void (*test)(void)) {
+int getinnerreps(void (*test)(void)) {
     innerreps = 10L;  // some initial value
     double time = 0.0;
 
     while (time < targettesttime) {
-	double start  = getclock();
-	test();
-	time = (getclock() - start) * 1.0e6;
-	innerreps *=2;
+    double start  = getclock();
+    test();
+    time = (getclock() - start) * 1.0e6;
+    innerreps *=2;
 
-	// Test to stop code if compiler is optimising reference time expressions away
-	if (innerreps > (targettesttime*1.0e15)) {
-	    printf("Compiler has optimised reference loop away, STOP! \n");
-	    printf("Try recompiling with lower optimisation level \n");
-	    exit(1);
-	}
+    // Test to stop code if compiler is optimising reference time expressions away
+    if (innerreps > (targettesttime*1.0e15)) {
+        printf("Compiler has optimised reference loop away, STOP! \n");
+        printf("Try recompiling with lower optimisation level \n");
+        exit(1);
+    }
     }
     return innerreps;
 }
@@ -163,7 +161,7 @@ unsigned long getinnerreps(void (*test)(void)) {
 void printheader(char *name) {
     printf("\n");
     printf("--------------------------------------------------------\n");
-    printf("Computing %s time using %lu reps\n", name, innerreps);
+    printf("Computing %s time using %d reps\n", name, innerreps);
 }
 
 void stats(double *mtp, double *sdp) {
@@ -177,16 +175,16 @@ void stats(double *mtp, double *sdp) {
     totaltime = 0.;
 
     for (i = 1; i <= outerreps; i++) {
-	mintime = (mintime < times[i]) ? mintime : times[i];
-	maxtime = (maxtime > times[i]) ? maxtime : times[i];
-	totaltime += times[i];
+    mintime = (mintime < times[i]) ? mintime : times[i];
+    maxtime = (maxtime > times[i]) ? maxtime : times[i];
+    totaltime += times[i];
     }
 
     meantime = totaltime / outerreps;
     sumsq = 0;
 
     for (i = 1; i <= outerreps; i++) {
-	sumsq += (times[i] - meantime) * (times[i] - meantime);
+    sumsq += (times[i] - meantime) * (times[i] - meantime);
     }
     sd = sqrt(sumsq / (outerreps - 1));
 
@@ -195,14 +193,14 @@ void stats(double *mtp, double *sdp) {
     nr = 0;
 
     for (i = 1; i <= outerreps; i++) {
-	if (fabs(times[i] - meantime) > cutoff)
-	    nr++;
+    if (fabs(times[i] - meantime) > cutoff)
+        nr++;
     }
 
     printf("\n");
     printf("Sample_size       Average     Min         Max          S.D.          Outliers\n");
     printf(" %d                %f   %f   %f    %f      %d\n",
-	   outerreps, meantime, mintime, maxtime, sd, nr);
+       outerreps, meantime, mintime, maxtime, sd, nr);
     printf("\n");
 
     *mtp = meantime;
@@ -211,17 +209,17 @@ void stats(double *mtp, double *sdp) {
 }
 
 void printfooter(char *name, double testtime, double testsd,
-		 double referencetime, double refsd) {
+         double referencetime, double refsd) {
     printf("%s time     = %f microseconds +/- %f\n",
-	   name, testtime, CONF95*testsd);
+       name, testtime, CONF95*testsd);
     printf("%s overhead = %f microseconds +/- %f\n",
-	   name, testtime-referencetime, CONF95*(testsd+referencesd));
+       name, testtime-referencetime, CONF95*(testsd+referencesd));
 
 }
 
 void printreferencefooter(char *name, double referencetime, double referencesd) {
-    printf("%s time     = %f microseconds +/- %f\n",
-	   name, referencetime, CONF95 * referencesd);
+    printf("%s time     = %f microseconds +/- %f\n", 
+       name, referencetime, CONF95 * referencesd);
 }
 
 void init(int argc, char **argv)
@@ -229,36 +227,37 @@ void init(int argc, char **argv)
 #pragma omp parallel
     {
 #pragma omp master
-	{
-	    nthreads = omp_get_num_threads();
-	}
+    {
+        nthreads = omp_get_num_threads();
+    }
 
     }
 
     parse_args(argc, argv);
 
     if (outerreps == -1) {
-	outerreps = DEFAULT_OUTER_REPS;
+    outerreps = DEFAULT_OUTER_REPS;
     }
     if (targettesttime == 0.0) {
-	targettesttime = DEFAULT_TEST_TARGET_TIME;
+    targettesttime = DEFAULT_TEST_TARGET_TIME;
     }
     if (delaytime == -1.0) {
-	delaytime = DEFAULT_DELAY_TIME; 
+    delaytime = DEFAULT_DELAY_TIME; 
     }
-    delaylength = getdelaylengthfromtime(delaytime); // Always need to compute delaylength in iterations 
-    
+    // Always need to compute delaylength in iterations 
+    delaylength = getdelaylengthfromtime(delaytime);
+
     times = malloc((outerreps+1) * sizeof(double));
 
     printf("Running OpenMP benchmark version 3.0\n"
-	   "\t%d thread(s)\n"
-	   "\t%d outer repetitions\n"
-	   "\t%0.2f test time (microseconds)\n"
-	   "\t%d delay length (iterations) \n"
-	   "\t%f delay time (microseconds)\n",
-	   nthreads,
-	   outerreps, targettesttime,
-	   delaylength, delaytime);
+       "\t%d thread(s)\n"
+       "\t%d outer repetitions\n"
+       "\t%0.2f test time (microseconds)\n"
+       "\t%d delay length (iterations) \n"
+       "\t%f delay time (microseconds)\n",
+       nthreads,
+       outerreps, targettesttime,
+       delaylength, delaytime);
 }
 
 void finalise(void) {
@@ -282,9 +281,9 @@ void reference(char *name, void (*refer)(void)) {
     initreference(name);
 
     for (k = 0; k <= outerreps; k++) {
-	start = getclock();
-	refer();
-	times[k] = (getclock() - start) * 1.0e6 / (double) innerreps;
+    start = getclock();
+    refer();
+    times[k] = (getclock() - start) * 1.0e6 / (double) innerreps;
     }
 
     finalisereference(name);
@@ -320,9 +319,9 @@ void benchmark(char *name, void (*test)(void))
     intitest(name);
 
     for (k=0; k<=outerreps; k++) {
-	start = getclock();
-	test();
-	times[k] = (getclock() - start) * 1.0e6 / (double) innerreps;
+    start = getclock();
+    test();
+    times[k] = (getclock() - start) * 1.0e6 / (double) innerreps;
     }
 
     finalisetest(name);
@@ -332,16 +331,15 @@ void benchmark(char *name, void (*test)(void))
 // For the Cray compiler on HECToR we need to turn off optimisation 
 // for the delay and array_delay functions. Other compilers should
 // not be afffected. 
-#pragma _CRI noopt
 void delay(int delaylength) {
 
     int i;
     float a = 0.;
 
     for (i = 0; i < delaylength; i++)
-	a += i;
+    a += i;
     if (a < 0)
-	printf("%f \n", a);
+    printf("%f \n", a);
 
 }
 
@@ -350,13 +348,11 @@ void array_delay(int delaylength, double a[1]) {
     int i;
     a[0] = 1.0;
     for (i = 0; i < delaylength; i++)
-	a[0] += i;
+    a[0] += i;
     if (a[0] < 0)
-	printf("%f \n", a[0]);
+    printf("%f \n", a[0]);
 
 }
-// Re-enable optimisation for remainder of source. 
-#pragma _CRI opt
 
 double getclock() {
     double time;
