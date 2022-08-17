@@ -80,7 +80,7 @@ void refer() {
     int j;
     double a[1];
     for (j = 0; j < innerreps; j++) {
-	array_delay(delaylength, a);
+	    array_delay(delaylength, a);
     }
 }
 

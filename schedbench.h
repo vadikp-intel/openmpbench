@@ -45,6 +45,6 @@ void testguidedn(void);
 
 void testsections(void);
 
-void testsections_noomp(void);
+void refer_testsections(void);
 
 #endif //SCHEDBENCH_H
