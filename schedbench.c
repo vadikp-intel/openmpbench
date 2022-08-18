@@ -170,7 +170,7 @@ void refer_testsections() {
 			}
 		}
 		{
-			for (j = 0; j < innerreps * 5; j++) {
+			for (j = 0; j < innerreps; j++) {
 				delay(delaylength * 4);
 			}
 		}
