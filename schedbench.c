@@ -157,102 +157,134 @@ void testguidedn() {
 }
 
 void refer_testsections() {
-	int j;
+	int i,j;
 	{
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength);
 			}
+		}
 		}
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 2);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength * 2);
 			}
+		}
 		}
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 4);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength * 4);
 			}
+		}
 		}
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 8);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength * 8);
 			}
+		}
 		}
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 16);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength * 16);
 			}
+		}
 		}
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 32);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength * 32);
 			}
+		}
 		}
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 64);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength * 64);
 			}
+		}
 		}
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 128);
+				for (i = 0; i < itersperthr; i++) {
+					delay(delaylength * 128);
 			}
+		}
 		}
 	}
 }
 
 void testsections() {
-	int j;
+	int i,j;
 #pragma omp parallel sections num_threads(nthreads)
 	{
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength);
 			}
+		}
 		}
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 2);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength * 2);
 			}
+		}
 		}
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 4);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength * 4);
 			}
+		}
 		}
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 8);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength * 8);
 			}
+		}
 		}
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 16);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength * 16);
 			}
+		}
 		}
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 32);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength * 32);
 			}
+		}
 		}
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 64);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength * 64);
 			}
+		}
 		}
 #pragma omp section
 		{
 			for (j = 0; j < innerreps; j++) {
-				delay(delaylength * 128);
+				for (i = 0; i < itersperthr * nthreads; i++) {
+					delay(delaylength * 128);
 			}
+		}
 		}
 	}
 }
