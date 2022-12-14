@@ -38,6 +38,8 @@
 #include "common.h"
 #include "arraybench.h"
 
+#define IDA 256
+
 double btest[IDA];
 double atest[IDA];
 

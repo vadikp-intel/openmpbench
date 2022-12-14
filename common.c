@@ -59,6 +59,8 @@ double testtime;             // The average test time in microseconds for
 double testsd;               // The standard deviation in the test time in
                              // microseconds for outerreps runs.
 int verbose = 0;             // verbosity of output
+int schedbench = 0;
+//int sd = 0;                  
 
 void usage(char *argv[]) {
     printf("Usage: %s.x \n"
@@ -145,6 +147,11 @@ int getdelaylengthfromtime(double delaytime) {
 }
 
 int getinnerreps(void (*test)(void)) {
+	// fix inneriterations 
+	if (schedbench)
+		return 1;
+	else
+		return 8192*4;
     innerreps = 1L;  // some initial value
     double time = 0.0;
 

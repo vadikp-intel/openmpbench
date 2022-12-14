@@ -114,8 +114,10 @@ void referatom(){
     b = 1.0;
     c = (1.0 + epsilon);
     for (j = 0; j < innerreps; j++) {
-	aaaa += b;
-	b *= c;
+	for(int i = 0; i < 10; i++) {
+		aaaa += b;
+		b *= c;
+	}
     }
     if (aaaa < 0.0)
 	printf("%f\n", aaaa);
@@ -230,9 +232,11 @@ void testatom() {
 #pragma omp parallel private(j) firstprivate(b)
     {
 	for (j = 0; j < innerreps / nthreads; j++) {
+	for(int i = 0; i < 10; i++) {
 #pragma omp atomic	
 	    aaaa += b;
 	    b *= c;
+	}
 	}
     }
     if (aaaa < 0.0)

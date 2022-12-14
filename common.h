@@ -47,6 +47,8 @@ extern int outerreps;             // Outer repetitions
 extern int innerreps;             // Inner repetitions
 extern double delaytime;          // Delay time in microseconds
 extern double targettesttime;     // The length of time in microseconds the test
+extern int schedbench;
+
                                   // should run for
 extern double *times;             // Array to store results in
 
