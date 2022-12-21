@@ -59,12 +59,11 @@ double testtime;             // The average test time in microseconds for
 double testsd;               // The standard deviation in the test time in
                              // microseconds for outerreps runs.
 int verbose = 0;             // verbosity of output
-int schedbench = 0;
-//int sd = 0;                  
 
 void usage(char *argv[]) {
     printf("Usage: %s.x \n"
        "\t--outer-repetitions <outer-repetitions> (default %d)\n"
+	   "\t--inner-repetitions <inner-repetitions> (default  1)\n"
        "\t--test-time <target-test-time> (default %0.2f microseconds)\n"
        "\t--delay-time <delay-time> (default %0.4f microseconds)\n"
        "\t--verbose\n",
@@ -88,6 +87,14 @@ void parse_args(int argc, char *argv[]) {
         outerreps = atoi(argv[++arg]);
         if (outerreps == 0) {
         printf("Invalid integer:--outer-repetitions: %s\n", argv[arg]);
+        usage(argv);
+        exit(EXIT_FAILURE);
+        }
+        
+    } else if (strcmp(argv[arg], "--inner-repetitions") == 0) {
+        innerreps = atoi(argv[++arg]);
+        if (innerreps == 0) {
+        printf("Invalid integer:--inner-repetitions: %s\n", argv[arg]);
         usage(argv);
         exit(EXIT_FAILURE);
         }
@@ -147,32 +154,7 @@ int getdelaylengthfromtime(double delaytime) {
 }
 
 int getinnerreps(void (*test)(void)) {
-	// fix inneriterations 
-	if (schedbench)
-		return 1;
-	else
-		return 8192*4;
-    innerreps = 1L;  // some initial value
-    double time = 0.0;
-
-    double start = getclock();
-    test();
-    time = (getclock() - start) * 1.0e6;
-
-    while (time < targettesttime) {
-        start  = getclock();
-        test();
-        time = (getclock() - start) * 1.0e6;
-        innerreps *=2;
-
-        // Test to stop code if compiler is optimising reference time expressions away
-        if (innerreps > (targettesttime*1.0e15)) {
-            printf("Compiler has optimised reference loop away, STOP! \n");
-            printf("Try recompiling with lower optimisation level \n");
-            exit(1);
-        }
-    }
-    return innerreps;
+	return innerreps;
 }
 
 void printheader(char *name) {
