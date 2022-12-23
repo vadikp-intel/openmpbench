@@ -192,13 +192,10 @@ void testcrit() {
 #pragma omp parallel private(j)
     {
 	for (j = 0; j < innerreps / nthreads; j++) {
-		for(int i = 0; i < ADDITIONAL_ITERATIONS; i++) {
-	
 #pragma omp critical
 			{
 			delay(delaylength);
 			}
-		}
 	}
     }
 }
@@ -210,7 +207,6 @@ void testlock() {
     {
 	for (j = 0; j < innerreps / nthreads; j++) {
 		for(int i = 0; i < ADDITIONAL_ITERATIONS; i++) {
-	
 			omp_set_lock(&lock);
 			delay(delaylength);
 			omp_unset_lock(&lock);

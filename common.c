@@ -122,6 +122,7 @@ void parse_args(int argc, char *argv[]) {
 }
 
 int getdelaylengthfromtime(double delaytime) {
+	return delaytime;
     int i, reps;
     double lapsedtime, starttime; // seconds
 
@@ -264,11 +265,12 @@ void init(int argc, char **argv)
     printf("Running OpenMP benchmark version 3.0\n"
         "\t%d thread(s)\n"
         "\t%d outer repetitions\n"
+        "\t%d inner repetitions\n"
         "\t%0.2f test time (microseconds)\n"
         "\t%d delay length (iterations) \n"
         "\t%f delay time (microseconds)\n",
         nthreads,
-        outerreps, targettesttime,
+        outerreps, innerreps, targettesttime,
         delaylength, delaytime);
 }
 
