@@ -160,7 +160,32 @@ int getdelaylengthfromtime(double delaytime) {
 }
 
 int getinnerreps(void (*test)(void)) {
-	return innerreps;
+	if(fixeddelay) {
+		// Note: We fix the delay length as delat time.
+		// Reduce SD across runs.
+	    return innerreps;
+	}
+	innerreps = 1L;  // some initial value
+    double time = 0.0;
+
+    double start = getclock();
+    test();
+    time = (getclock() - start) * 1.0e6;
+
+    while (time < targettesttime) {
+        start  = getclock();
+        test();
+        time = (getclock() - start) * 1.0e6;
+        innerreps *=2;
+
+        // Test to stop code if compiler is optimising reference time expressions away
+        if (innerreps > (targettesttime*1.0e15)) {
+            printf("Compiler has optimised reference loop away, STOP! \n");
+            printf("Try recompiling with lower optimisation level \n");
+            exit(1);
+        }
+    }
+    return innerreps;
 }
 
 void printheader(char *name) {
