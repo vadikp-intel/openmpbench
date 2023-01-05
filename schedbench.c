@@ -46,12 +46,11 @@ int main(int argc, char **argv) {
 
     init(argc, argv);
     // Also print itersperthr
-	// Also print itersperthr
     printf("\t%d iterations per threads\n", itersperthr);
 	
 	/* GENERATE REFERENCE TIME */
     reference("reference time", &refer);
-	//printf("\t%d default inner iterations\n",innerreps);
+	
     /* TEST STATIC */
     benchmark("STATIC", &teststatic);
 

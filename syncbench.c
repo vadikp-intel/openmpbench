@@ -114,10 +114,10 @@ void referatom(){
     b = 1.0;
     c = (1.0 + epsilon);
     for (j = 0; j < innerreps; j++) {
-	for(int i = 0; i < ADDITIONAL_ITERATIONS; i++) {
-		aaaa += b;
-		b *= c;
-	}
+	    for(int i = 0; i < ADDITIONAL_ITERATIONS; i++) {
+		   aaaa += b;
+		   b *= c;
+	    }
     }
     if (aaaa < 0.0)
 	printf("%f\n", aaaa);
@@ -221,7 +221,7 @@ void testorder() {
     for (j = 0; j < (int)innerreps; j++) {
 		for(int i = 0; i < ADDITIONAL_ITERATIONS; i++) {	
 #pragma omp ordered
-		delay(delaylength);
+		    delay(delaylength);
 		}
     }
 }
@@ -236,11 +236,11 @@ void testatom() {
 #pragma omp parallel private(j) firstprivate(b)
     {
 	for (j = 0; j < innerreps / nthreads; j++) {
-	for(int i = 0; i < ADDITIONAL_ITERATIONS; i++) {
+	    for(int i = 0; i < ADDITIONAL_ITERATIONS; i++) {
 #pragma omp atomic	
-	    aaaa += b;
-	    b *= c;
-	}
+			aaaa += b;
+			b *= c;
+	    }
 	}
     }
     if (aaaa < 0.0)

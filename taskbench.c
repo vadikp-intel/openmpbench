@@ -43,11 +43,10 @@ int main(int argc, char **argv) {
 
     init(argc, argv);
 
-//#ifdef OMPVER3
+#ifdef OMPVER3
 
     /* GENERATE REFERENCE TIME */
     reference("reference time 1", &refer);
-	//printf("\t%d default inner iterations\n",innerreps);
 
     /* TEST PARALLEL TASK GENERATION */
     benchmark("PARALLEL TASK", &testParallelTaskGeneration);
@@ -59,26 +58,26 @@ int main(int argc, char **argv) {
     benchmark("MASTER TASK BUSY SLAVES", &testMasterTaskGenerationWithBusySlaves);
 
     /* TEST CONDITIONAL TASK GENERATION */
-//#ifndef DISABLE_CONDITIONAL_TASK_TEST
+#ifndef DISABLE_CONDITIONAL_TASK_TEST
     benchmark("CONDITIONAL TASK", &testConditionalTaskGeneration);
-//#endif // DISABLE_CONDITIONAL_TASK_TEST
+#endif // DISABLE_CONDITIONAL_TASK_TEST
 
     /* TEST TASK WAIT */
     benchmark("TASK WAIT", &testTaskWait);
 
     /* TEST TASK BARRIER */
-//#ifndef DISABLE_BARRIER_TEST
+#ifndef DISABLE_BARRIER_TEST
     benchmark("TASK BARRIER", &testTaskBarrier);
-//#endif //DISABLE_BARRIER_TEST
+#endif //DISABLE_BARRIER_TEST
 
-//#ifndef DISABLE_NESTED_TASKS_TESTS
+#ifndef DISABLE_NESTED_TASKS_TESTS
     /* TEST NESTED TASK GENERATION */
     benchmark("NESTED TASK", &testNestedTaskGeneration);
 
     /* TEST NESTED MASTER TASK GENERATION */
     benchmark("NESTED MASTER TASK", &testNestedMasterTaskGeneration);
 
-//#endif // DISABLE_NESTED_TASKS_TESTS
+#endif // DISABLE_NESTED_TASKS_TESTS
 
     /* GENERATE THE SECOND REFERENCE TIME */
     reference("reference time 2", &refer);
@@ -89,7 +88,7 @@ int main(int argc, char **argv) {
     /* TEST LEAF TASK TREE */
     benchmark("LEAF TASK TREE", &testLeafTaskGeneration);
 
-//#endif // OMPVER3
+#endif // OMPVER3
 
     finalise();
 
