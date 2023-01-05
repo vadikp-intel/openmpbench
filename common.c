@@ -59,7 +59,7 @@ double testtime;             // The average test time in microseconds for
 double testsd;               // The standard deviation in the test time in
                              // microseconds for outerreps runs.
 int verbose = 0;             // verbosity of output
-int fixeddelay = 0;          // We fix the de
+int fixeddelay = 0;          // We fix the delay and inneriterations if set to 1.
 
 void usage(char *argv[]) {
     printf("Usage: %s.x \n"
@@ -124,7 +124,7 @@ void parse_args(int argc, char *argv[]) {
 
 int getdelaylengthfromtime(double delaytime) {
 	if (fixeddelay) {
-		// Note: We fix the delay length as delat time.
+		// Note: We fix the delay length as delay time.
 		// Reduce SD across runs.
 		return delaytime;
 	}
@@ -161,7 +161,7 @@ int getdelaylengthfromtime(double delaytime) {
 
 int getinnerreps(void (*test)(void)) {
 	if(fixeddelay) {
-		// Note: We fix the delay length as delat time.
+		// Note: fixed inner repetitions input by user.
 		// Reduce SD across runs.
 	    return innerreps;
 	}
