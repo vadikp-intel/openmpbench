@@ -35,11 +35,7 @@
 
 #define DEFAULT_OUTER_REPS 20   // Outer repetitions
 #define DEFAULT_TEST_TARGET_TIME 1000.0 // Test Target time in microseconds.
-#ifdef SCHEDBENCH
-#define DEFAULT_DELAY_TIME 15.0  // Default delaytime in microseconds for schedbench
-#else
 #define DEFAULT_DELAY_TIME 0.10  // Default delaytime in microseconds
-#endif
 
 extern int nthreads;              // Number of OpenMP threads
 extern int delaylength;           // The number of iterations to delay for
@@ -47,6 +43,8 @@ extern int outerreps;             // Outer repetitions
 extern int innerreps;             // Inner repetitions
 extern double delaytime;          // Delay time in microseconds
 extern double targettesttime;     // The length of time in microseconds the test
+
+#define ADDITIONAL_ITERATIONS 10
                                   // should run for
 extern double *times;             // Array to store results in
 

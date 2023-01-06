@@ -59,10 +59,12 @@ double testtime;             // The average test time in microseconds for
 double testsd;               // The standard deviation in the test time in
                              // microseconds for outerreps runs.
 int verbose = 0;             // verbosity of output
+int fixeddelay = 0;          // We fix the delay and inneriterations if set to 1.
 
 void usage(char *argv[]) {
     printf("Usage: %s.x \n"
        "\t--outer-repetitions <outer-repetitions> (default %d)\n"
+	   "\t--inner-repetitions <inner-repetitions> (No default. if set, we fix inner repetitions and delaylength as delay time)\n"
        "\t--test-time <target-test-time> (default %0.2f microseconds)\n"
        "\t--delay-time <delay-time> (default %0.4f microseconds)\n"
        "\t--verbose\n",
@@ -90,6 +92,14 @@ void parse_args(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
         }
         
+    } else if (strcmp(argv[arg], "--inner-repetitions") == 0) {
+        innerreps = atoi(argv[++arg]);
+        if (innerreps == 0) {
+        printf("Invalid integer:--inner-repetitions: %s\n", argv[arg]);
+        usage(argv);
+        exit(EXIT_FAILURE);
+        }
+        fixeddelay = 1;
     } else if (strcmp(argv[arg], "--test-time") == 0) {
         targettesttime = atof(argv[++arg]);
         if (targettesttime == 0) {
@@ -113,6 +123,11 @@ void parse_args(int argc, char *argv[]) {
 }
 
 int getdelaylengthfromtime(double delaytime) {
+	if (fixeddelay) {
+		// Note: We fix the delay length as delay time.
+		// Reduce SD across runs.
+		return delaytime;
+	}
     int i, reps;
     double lapsedtime, starttime; // seconds
 
@@ -145,7 +160,12 @@ int getdelaylengthfromtime(double delaytime) {
 }
 
 int getinnerreps(void (*test)(void)) {
-    innerreps = 1L;  // some initial value
+	if(fixeddelay) {
+		// Note: fixed inner repetitions input by user.
+		// Reduce SD across runs.
+	    return innerreps;
+	}
+	innerreps = 1L;  // some initial value
     double time = 0.0;
 
     double start = getclock();
@@ -275,11 +295,12 @@ void init(int argc, char **argv)
     printf("Running OpenMP benchmark version 3.0\n"
         "\t%d thread(s)\n"
         "\t%d outer repetitions\n"
+        "\t%d inner repetitions\n"
         "\t%0.2f test time (microseconds)\n"
         "\t%d delay length (iterations) \n"
         "\t%f delay time (microseconds)\n",
         nthreads,
-        outerreps, targettesttime,
+        outerreps, innerreps, targettesttime,
         delaylength, delaytime);
 }
 

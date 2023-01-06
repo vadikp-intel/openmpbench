@@ -93,6 +93,15 @@ compiler versions, e.g.
    this to a file. ./benchmark --help will give the usage options. 
 
 
+==============
+Run time options
+==============
+./benchmark --outer-repetitions <outer-repetitions> (default DEFAULT_OUTER_REPS)
+            --inner-repetitions <inner-repetitions> (default  1)
+            --test-time <target-test-time> (default DEFAULT_TEST_TARGET_TIME) in microseconds
+            --delay-time <delay-time> (default DEFAULT_DELAY_TIME) in microseconds
+            --verbose
+
 =================
 Additional notes
 =================
@@ -111,3 +120,8 @@ Additional notes
     should rejects runs where the standard deviation or number of outliers is 
     large: this is a good indication that the benchmark did not have almost 
     exclusive access to processors. 
+
+4. For most testcases the cost reported is the average of 1 operations in 
+   microseconds. However for some tests which are too small, we report the 
+   cost for ADDITIONAL_ITERATIONS (set to 10).
+  
